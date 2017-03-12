@@ -23,7 +23,7 @@ def getBit(number, offset):
 def findMessage(pixels):
     'return hidden message stored in picture'
     message = []
-    for offset in range(1, 8):
+    for offset in range(1, 2):
         for triple in pixels:
             for n in triple:
                 message.append(getBit(n, offset))
@@ -43,7 +43,11 @@ def toMessage(image):
     message = ''.join(message)
     message = addPadding(message)
     message = int(message, 2)
-    return binascii.unhexlify('%x' % message)
+    message = '%x' % message
+    if (len(str(message)) % 2 == 1):
+        message += '0'
+    message = binascii.unhexlify(message)
+    return message
 
 
 image = str(sys.argv[1])
