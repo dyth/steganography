@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """script to hide information within an image"""
+# run using python hide.py <sampleImageName> "<sampleMessage>" <outImageName>
 from PIL import Image
 import sys, binascii
 
@@ -46,19 +47,22 @@ def hideMessage(pixels, message):
     return pixels
 
 
-# read image as first argument on command line
+# get arguments from variables
 image = str(sys.argv[1])
+message = str(sys.argv[2])
+imageOutput = str(sys.argv[3])
+
+# read image as first argument on command line
 pixels, width, height = readPixelData(image)
 pixels = [[i for i in triple] for triple in pixels]
 
 # read message as second argument on command line, then convert to binary
-message = str(sys.argv[2])
 message = bin(int(binascii.hexlify(message), 16))[2:]
+
 pixels = hideMessage(pixels, message)
-pixels = [tuple(triple) for triple in pixels]
 
 # create hidden image
-imageOutput = str(sys.argv[3])
 img = Image.new('RGB', (width, height))
+pixels = [tuple(triple) for triple in pixels]
 img.putdata(pixels)
 img.save(imageOutput)

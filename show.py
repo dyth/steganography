@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """script to show hidden information within an image"""
+# run using python show.py <imageName> | less
 from PIL import Image
 import sys, binascii
 
@@ -46,5 +47,5 @@ def toMessage(image):
 
 
 image = str(sys.argv[1])
-Pixels, _, _ = readPixelData(image)
-print toMessage(Pixels)
+pixels, _, _ = readPixelData(image)
+print toMessage(pixels)
