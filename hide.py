@@ -24,8 +24,9 @@ def setBit(number, offset, value):
 def readPixelData(image):
     'read set of three pixels from an image'
     im = Image.open(image)
+    width, height = im.size
     pixels = list(im.getdata())
-    return pixels
+    return pixels, width, height
 
 
 def hideMessage(pixels, message):
@@ -45,49 +46,19 @@ def hideMessage(pixels, message):
     return pixels
 
 
-
-
-def getBit(number, offset):
-    'return number[-offset]'
-    number = '{0:08b}'.format(number)
-    number = list(number)
-    return number[-offset]
-
-
-def findMessage(pixels):
-    'return hidden message stored in picture'
-    message = []
-    for offset in range(1, 8):
-        for triple in pixels:
-            for n in triple:
-                message.append(getBit(n, offset))
-    return message
-
-
-def addPadding(message):
-    'return correct padding'
-    while ((len(message) % 8) != 7):
-        message += '1'
-    return message
-
-
-def toMessage(image):
-    'convert message to string'
-    message = findMessage(newImage)
-    message = ''.join(message)
-    message = addPadding(message)
-    message = int(message, 2)
-    return binascii.unhexlify('%x' % message)
-
-
 # read image as first argument on command line
 image = str(sys.argv[1])
-pixels = readPixelData(image)
+pixels, width, height = readPixelData(image)
 pixels = [[i for i in triple] for triple in pixels]
 
 # read message as second argument on command line, then convert to binary
 message = str(sys.argv[2])
 message = bin(int(binascii.hexlify(message), 16))[2:]
-newImage = hideMessage(pixels, message)
+pixels = hideMessage(pixels, message)
+pixels = [tuple(triple) for triple in pixels]
 
-print toMessage(newImage)
+# create hidden image
+imageOutput = str(sys.argv[3])
+img = Image.new('RGB', (width, height))
+img.putdata(pixels)
+img.save(imageOutput)
