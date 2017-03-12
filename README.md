@@ -1,5 +1,9 @@
 # Steganography
 
-Hide string messages within an image.
+Requires `PIL`, `sys` and `binascii`
 
-Hide messages using `python hide.py <sampleImageName> "<sampleMessage>"`
+Hide and show strings within an image.
+
+Hide messages using `python hide.py <sampleImageName> "<sampleMessage>" <outImageName>`
+
+Read messages using `python show.py <imageName>`
