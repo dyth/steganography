@@ -37,13 +37,48 @@ def hideMessage(pixels, message):
         if (value == len(pixels)):
             value = 0
             offset += 1
-        else:
-            value += 1
         if (triple == 2):
             triple = 0
+            value += 1
         else:
             triple += 1
     return pixels
+
+
+
+
+def getBit(number, offset):
+    'return number[-offset]'
+    number = '{0:08b}'.format(number)
+    number = list(number)
+    #print number[-offset]
+    return number[-offset]
+
+
+def findMessage(pixels):
+    'return hidden message stored in picture'
+    message = []
+    for offset in range(1, 8):
+        for triple in pixels:
+            for n in triple:
+                message.append(getBit(n, offset))
+    return message
+
+
+def addPadding(message):
+    'return correct padding'
+    while ((len(message) % 8) != 7):
+        message += '1'
+    return message
+
+
+def toMessage(image):
+    'convert message to string'
+    message = findMessage(newImage)
+    message = ''.join(message)
+    message = addPadding(message)
+    message = int(message, 2)
+    return binascii.unhexlify('%x' % message)
 
 
 # read image as first argument on command line
@@ -54,5 +89,6 @@ pixels = [[i for i in triple] for triple in pixels]
 # read message as second argument on command line, then convert to binary
 message = str(sys.argv[2])
 message = bin(int(binascii.hexlify(message), 16))[2:]
-
 newImage = hideMessage(pixels, message)
+
+print toMessage(newImage)
