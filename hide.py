@@ -51,7 +51,6 @@ def getBit(number, offset):
     'return number[-offset]'
     number = '{0:08b}'.format(number)
     number = list(number)
-    #print number[-offset]
     return number[-offset]
 
 
